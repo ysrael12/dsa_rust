@@ -1,10 +1,17 @@
 mod sort; 
 mod utils;
-use sort::quick_sort::{QuickSort, Pivot, Order, Strategy};
+mod trees;
+
+use trees::binary_tree::TreeNode;
 
 fn main() {
-
-    let mut quick_sort = QuickSort::new(vec![3, 1, 4, 1, 5, 9, 2, 6], Pivot::Last, Order::Ascending, Strategy::Lomuto);
-    quick_sort.sort();
-    println!("{:?}", quick_sort.vec);
+    let mut root = TreeNode::new(10);
+    root.insert(5);
+    root.insert(15);  
+    root.insert(3);
+    root.insert(7);  
+    let found = root.search(&5);
+    println!("Value found: {}", found); 
+    let mut vector = root.to_vec();
+    println!("Inorder Traversal: {:?}", vector);
 }
