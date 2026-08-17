@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod sort; 
 mod utils;
 mod trees;

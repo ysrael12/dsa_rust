@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 pub fn is_ascending<T: PartialOrd>(i : usize, j : usize, vec : &Vec<T>) -> bool {
     return vec[i] <= vec[j];
 }

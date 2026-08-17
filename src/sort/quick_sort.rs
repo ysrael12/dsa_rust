@@ -1,24 +1,29 @@
+#![allow(dead_code)]
 use crate::utils::ordering::{is_ascending, is_descending, swap};
 
+
+#[allow(dead_code)]
 #[derive(PartialEq, Clone, Debug)]
 pub enum Pivot {
     First,
     Last,
     Middle,
 }
+#[allow(dead_code)]
 #[derive(PartialEq, Clone, Debug)]
 pub enum Order {
     Ascending,
     Descending,
 
 }
-
+#[allow(dead_code)]
 #[derive(PartialEq, Clone, Debug)]
 pub enum Strategy {
     Lomuto,
     Hoare,
 }
 
+#[allow(dead_code)]
 pub struct QuickSort<T> {
     pub vec: Vec<T>,
     pub pivot: Pivot,
@@ -28,6 +33,7 @@ pub struct QuickSort<T> {
 
 
 impl <T: Copy + PartialOrd>  QuickSort<T> {
+    #[allow(dead_code)]
     pub fn new(vec: Vec<T>, pivot: Pivot, order: Order, strategy: Strategy) -> Self {
         QuickSort {
             vec,
@@ -37,6 +43,7 @@ impl <T: Copy + PartialOrd>  QuickSort<T> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn sort(&mut self){
         if self.vec.len() > 1 {
             let hi = self.vec.len() - 1;
@@ -136,7 +143,7 @@ impl <T: Copy + PartialOrd>  QuickSort<T> {
             j -= 1;
         }
     }
-
+    #[allow(dead_code)]
     fn sorted(&self) -> Vec<T> {
         let mut v = self.vec.clone();
         match self.order {
@@ -146,6 +153,7 @@ impl <T: Copy + PartialOrd>  QuickSort<T> {
         v
     }
 
+    #[allow(dead_code)]
     pub fn is_sorted(&self) -> bool {
         self.vec == self.sorted()
     }
