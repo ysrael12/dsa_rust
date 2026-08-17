@@ -1,2 +1,3 @@
+#![allow(dead_code)]
 // pub mod merge_sort;
 pub mod quick_sort;

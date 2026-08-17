@@ -1,4 +1,5 @@
 /* Binary Tree Implementation */
+#![allow(dead_code)]
 type Node<T> = Option<Box<TreeNode<T>>>;
 
 pub(crate) struct TreeNode<T> {
@@ -32,7 +33,7 @@ impl <T: PartialOrd> TreeNode<T> {
             }
         }
     }
-
+    
     pub fn inorder_traversal<'a>(&'a self, result: &mut Vec<&'a T>){
 
         if let Some(ref left_node) = self.left{
