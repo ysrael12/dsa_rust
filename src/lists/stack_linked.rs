@@ -27,7 +27,8 @@ impl <T> Stack<T>{
             curr = curr.next;
         }
 
-        curr.data = value; 
+        curr.data = value;
+        self.size +=1;  
 
     }
 
@@ -57,6 +58,17 @@ impl <T> Stack<T>{
         None
     }
 
+    pub fn peek(&self) -> Option<i32> {
+        self.head.as_ref().map(|node| node.data)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.size == 0
+    }
+
+    pub fn len(&self) -> usize {
+        self.size
+    }
 }
 
 // TODO -> Unit tests
