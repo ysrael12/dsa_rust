@@ -1,18 +1,30 @@
-#![allow(dead_code)]
-mod sort; 
-mod utils;
-mod trees;
+mod lists;
 
-use trees::binary_tree::TreeNode;
+use lists::stack_linked::Stack;
+use lists::queue_linked::Queue;
+use lists::linked_list::LinkedList;
 
 fn main() {
-    let mut root = TreeNode::new(10);
-    root.insert(5);
-    root.insert(15);  
-    root.insert(3);
-    root.insert(7);  
-    let found = root.search(&5);
-    println!("Value found: {}", found); 
-    let mut vector = root.to_vec();
-    println!("Inorder Traversal: {:?}", vector);
+    // Teste Stack
+    let mut stack = Stack::new();
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    println!("Stack pop: {:?}", stack.pop());
+    println!("Stack peek: {:?}", stack.peek());
+    
+    // Teste Queue
+    let mut queue = Queue::new();
+    queue.push(1);
+    queue.push(2);
+    queue.push(3);
+    println!("Queue pop: {:?}", queue.pop());
+    println!("Queue peek: {:?}", queue.peek());
+    
+    // Teste LinkedList
+    let mut list = LinkedList::new();
+    list.push_front(1);
+    list.push_front(2);
+    list.push_front(3);
+    println!("List pop: {:?}", list.pop_front());
 }
