@@ -1,65 +1,40 @@
-use crate::simple_node::Node;
+use crate::lists::simple_node::Node;
 
 #[derive(PartialEq, Clone, Debug)] 
-pub struct Stack<T>{ 
-    pub head : Option<Box<Node<T>>>,
-    pub tail : Option<Box<Node<T>>>,
-    pub size : usize,
+pub struct Stack<T> { 
+    pub head: Option<Box<Node<T>>>,
+    pub size: usize,
 }
 
-impl <T> Stack<T>{
-    pub fn new(&mut self) -> Self{
-        Stack{
+impl<T> Stack<T> {
+    pub fn new() -> Self {
+        Stack {
             head: None,
-            tail: None, 
             size: 0
         }
     }
 
-    pub fn push(&mut self, value : T){
-        if self.head.is_none(){
-            self.head = value;
-            self.head.next = None; 
-        }
-
-        let mut curr : Node<T> = self.head;
-        while curr.next.is_some(){
-            curr = curr.next;
-        }
-
-        curr.data = value;
-        self.size +=1;  
-
+    pub fn push(&mut self, value: T) {
+        let mut new_node = Box::new(Node::new(value));
+        new_node.next = self.head.take();
+        self.head = Some(new_node);
+        self.size += 1;
     }
 
-     pub fn pop(&mut self) -> Option<i32> {
-        if self.head.is_none() {
-            return None;
-        }
-
-        let mut current = &mut self.head;
-        let mut prev: Option<&mut Box<Node<i32>>> = None;
-
-        while let Some(ref mut node) = current {
-            if node.next.is_none() {
-                let data = node.data;
-                if let Some(prev_node) = prev {
-                    prev_node.next = None;
-                } else {
-                    self.head = None;
-                }
-                self.size -= 1;
-                return Some(data);
-            }
-            prev = current.as_mut();
-            current = &mut node.next;
-        }
-
-        None
+    pub fn pop(&mut self) -> Option<T> {
+        self.head.take().map(|mut node| {
+            self.head = node.next.take();
+            self.size -= 1;
+            node.data
+        })
     }
 
-    pub fn peek(&self) -> Option<i32> {
-        self.head.as_ref().map(|node| node.data)
+    pub fn peek(&self) -> Option<&T> {
+        self.head.as_ref().map(|node| &node.data)
+    }
+
+    pub fn peek_mut(&mut self) -> Option<&mut T> {
+        self.head.as_mut().map(|node| &mut node.data)
     }
 
     pub fn is_empty(&self) -> bool {
@@ -69,6 +44,12 @@ impl <T> Stack<T>{
     pub fn len(&self) -> usize {
         self.size
     }
+
+    pub fn clear(&mut self) {
+        self.head = None;
+        self.size = 0;
+    }
 }
+
 
 // TODO -> Unit tests

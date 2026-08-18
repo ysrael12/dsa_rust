@@ -1,64 +1,38 @@
-use crate::simple_node::Node;
-use crate::linked_list::LinkedList;
+use std::collections::VecDeque;
 
-#[derive(PartialEq, Debug, Clone)]
-pub struct Queue<T>{
-    head: Option<Box<Node<T>>>, 
-    tail: Option<Box<Node<T>>>, 
-    size: usize, 
+#[derive(PartialEq, Clone, Debug)]
+pub struct Queue<T> {
+    inner: VecDeque<T>,
 }
 
-/* Como os metodos vivem repetindo, vamos usar traits para aplicar polimorfismo (key idea) */
-/* Desenvolvimento:  */
-// Mas acho que faz mais sentido utilizar o Queue como struct especifico, pq consigo instanciar port segmentação de tipos 
-// Para manter o principio de liskov do padrão Solid e inteface segmentation vamos criar uma forma especifica que lide com traits 
-// trait.rs vai ter todos os tratamentos e o tipo base é LinkedList
-
-impl <T> Queue<T>{
-    pub fn new(&mut self) -> Self{ 
-        Queue{ 
-            head: None, 
-            tail: None, 
-            size: None,
+impl<T> Queue<T> {
+    pub fn new() -> Self {
+        Queue {
+            inner: VecDeque::new(),
         }
     }
 
-    pub fn push(&mut self, value : T){
-        if self.head.is_none(){
-            self.head = value;
-            self.head.next = None; 
-        }
-
-        let mut curr : Node<T> = self.head;
-        while curr.next.is_some(){
-            curr = curr.next;
-        }
-
-        curr.data = value; 
-        self.size += 1;
-
+    pub fn push(&mut self, value: T) {
+        self.inner.push_back(value);
     }
 
-    pub fn pop(&mut self){
-        if self.head.is_none(){
-            return None;
-        }
-
-        self.head.data = None; 
-        self.head.next = None;
-        self.size -= 1; 
+    pub fn pop(&mut self) -> Option<T> {
+        self.inner.pop_front()
     }
 
-    pub fn peek(&self) -> Option<i32> {
-        self.head.as_ref().map(|node| node.data)
+    pub fn peek(&self) -> Option<&T> {
+        self.inner.front()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.size == 0
+        self.inner.is_empty()
     }
 
     pub fn len(&self) -> usize {
-        self.size
+        self.inner.len()
     }
 
+    pub fn clear(&mut self) {
+        self.inner.clear();
+    }
 }

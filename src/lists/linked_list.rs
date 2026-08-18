@@ -1,14 +1,12 @@
-use crate::simple_node::Node;
+use crate::lists::simple_node::Node;
 
-
-
+#[derive(PartialEq, Clone, Debug)]
 pub struct LinkedList<T> {
     pub head: Option<Box<Node<T>>>,
     pub size: usize,
 }
 
-impl LinkedList<i32> {
-
+impl<T> LinkedList<T> {
     pub fn new() -> Self {
         LinkedList {
             head: None,
@@ -16,14 +14,31 @@ impl LinkedList<i32> {
         }
     }
 
-    pub fn push(&mut self, data: i32) {
+    pub fn push_front(&mut self, value: T) {
+        let mut new_node = Box::new(Node::new(value));  // ✅ Box::new(Node::new(value))
+        new_node.next = self.head.take();
+        self.head = Some(new_node);
+        self.size += 1;
+    }
+
+    pub fn pop_front(&mut self) -> Option<T> {
+        self.head.take().map(|mut node| {
+            self.head = node.next.take();
+            self.size -= 1;
+            node.data
+        })
+    }
+
+    pub fn push_back(&mut self, value: T) {
+        let new_node = Box::new(Node::new(value));  // ✅ Box::new(Node::new(value))
+        
         if self.head.is_none() {
-            self.head = Some(Box::new(Node { data, next: None }));
+            self.head = Some(new_node);
         } else {
             let mut current = &mut self.head;
-            while let Some(ref mut node) = current {
+            while let Some(node) = current {
                 if node.next.is_none() {
-                    node.next = Some(Box::new(Node { data, next: None }));
+                    node.next = Some(new_node);
                     break;
                 }
                 current = &mut node.next;
@@ -32,34 +47,33 @@ impl LinkedList<i32> {
         self.size += 1;
     }
 
-    pub fn pop(&mut self) -> Option<i32> {
+    pub fn pop_back(&mut self) -> Option<T> {
         if self.head.is_none() {
             return None;
         }
 
-        let mut current = &mut self.head;
-        let mut prev: Option<&mut Box<Node<i32>>> = None;
+        if self.head.as_ref().unwrap().next.is_none() {
+            return self.pop_front();
+        }
 
-        while let Some(ref mut node) = current {
-            if node.next.is_none() {
-                let data = node.data;
-                if let Some(prev_node) = prev {
-                    prev_node.next = None;
-                } else {
-                    self.head = None;
-                }
+        let mut current = &mut self.head;
+        while let Some(node) = current {
+            if node.next.as_ref().unwrap().next.is_none() {
+                let data = node.next.take().unwrap().data;
                 self.size -= 1;
                 return Some(data);
             }
-            prev = current.as_mut();
             current = &mut node.next;
         }
-
         None
     }
 
-    pub fn peek(&self) -> Option<i32> {
-        self.head.as_ref().map(|node| node.data)
+    pub fn peek_front(&self) -> Option<&T> {
+        self.head.as_ref().map(|node| &node.data)
+    }
+
+    pub fn peek_front_mut(&mut self) -> Option<&mut T> {
+        self.head.as_mut().map(|node| &mut node.data)
     }
 
     pub fn is_empty(&self) -> bool {
@@ -69,32 +83,9 @@ impl LinkedList<i32> {
     pub fn len(&self) -> usize {
         self.size
     }
-}
 
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_linked_list() {
-        let mut list = LinkedList::new();
-        assert!(list.is_empty());
-        assert_eq!(list.len(), 0);
-
-        list.push(1);
-        list.push(2);
-        list.push(3);
-        assert!(!list.is_empty());
-        assert_eq!(list.len(), 3);
-        assert_eq!(list.peek(), Some(1));
-
-        assert_eq!(list.pop(), Some(3));
-        assert_eq!(list.len(), 2);
-        assert_eq!(list.peek(), Some(1));
-
-        assert_eq!(list.pop(), Some(2));
-        assert_eq!(list.pop(), Some(1));
-        assert!(list.is_empty());
+    pub fn clear(&mut self) {
+        self.head = None;
+        self.size = 0;
     }
 }

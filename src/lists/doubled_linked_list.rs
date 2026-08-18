@@ -12,35 +12,35 @@ pub struct DoublyLinkedList<T>{
     pub size: usize,
 }
 
-impl DoublyLinkedList<i32>{
-
-    pub fn new() -> Self{
-        DoublyLinkedList{
+impl DoublyLinkedList<i32> {
+    pub fn new() -> Self {
+        DoublyLinkedList {
             head: None,
             tail: None,
             size: 0,
         }
     }
 
-    pub fn push(&mut self, data: i32){
-        let new_node = Box::new(Node{
+    pub fn push(&mut self, data: i32) {
+        let new_node = Box::new(Node {
             data,
             next: None,
             prev: None,
         });
 
-        match self.tail.take(){
+        match self.tail.take() {
             Some(mut old_tail) => {
                 old_tail.next = Some(new_node);
-                let new_tail = old_tail.next.as_mut().unwrap();
+                let mut new_tail = old_tail.next.take().unwrap();
                 new_tail.prev = Some(old_tail);
-                self.tail = Some(new_tail.clone());
-            },
+                self.tail = Some(new_tail);
+            }
             None => {
                 self.head = Some(new_node.clone());
                 self.tail = Some(new_node);
             }
         }
+
         self.size += 1;
     }
 }
